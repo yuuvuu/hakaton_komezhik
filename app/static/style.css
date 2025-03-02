@@ -1,0 +1,621 @@
+/* Подключаем шрифт Inter от Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Общие стили */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e1e2f 0%, #2a2a4a 100%);
+    color: #ffffff;
+    overflow: hidden;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+/* Хедер чата */
+.chat-header {
+    display: none;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(90deg, #3a3a5a 0%, #4a4a7a 100%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 28px;
+    padding: 10px;
+    cursor: pointer;
+    color: #a1a1ff;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.back-button:hover {
+    transform: scale(1.2);
+    color: #ffffff;
+}
+
+.chat-info {
+    flex-grow: 1;
+}
+
+#chat-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#participants-count {
+    font-size: 14px;
+    color: #a1a1ff;
+    font-weight: 500;
+}
+
+/* Контейнер контента */
+.content-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Список комнат */
+.rooms-list {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: linear-gradient(90deg, #3a3a5a 0%, #4a4a7a 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.list-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #a1a1ff;
+    padding: 5px;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.menu-button:hover {
+    transform: scale(1.1);
+    color: #ffffff;
+}
+
+#menu-options {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    background: linear-gradient(135deg, #3a3a5a 0%, #4a4a7a 100%);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    z-index: 1000;
+}
+
+.menu-option {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 20px);
+    margin: 5px 10px;
+    text-align: left;
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    border-radius: 25px;
+    box-sizing: border-box;
+}
+
+.menu-option:hover {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.menu-option i {
+    margin-right: 10px;
+}
+
+#rooms-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: calc(100% - 50px);
+    overflow-y: auto;
+}
+
+#rooms-list li {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 0.3s, transform 0.3s;
+}
+
+#rooms-list li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+#rooms-list li .room-meta {
+    font-size: 14px;
+    color: #a1a1ff;
+    font-weight: 500;
+}
+
+/* Окно чата */
+.chat-window {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    animation: fadeSlideIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+#chat-container {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #a1a1ff #3a3a5a;
+}
+
+#chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+    background: #a1a1ff;
+    border-radius: 4px;
+}
+
+#chat-container::-webkit-scrollbar-track {
+    background: #3a3a5a;
+}
+
+.message {
+    background: linear-gradient(135deg, #4a4a7a 0%, #6b6b9a 100%);
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin: 8px 0;
+    max-width: 70%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.system-message {
+    color: #ff8e53;
+    font-style: italic;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 14px;
+    animation: fadeIn 0.3s ease;
+}
+
+#message-input {
+    margin: 15px;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+#message-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+#message-input::placeholder {
+    color: #a1a1ff;
+}
+
+/* Окно профиля */
+.profile-window {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    animation: fadeSlideIn 0.3s ease-in-out forwards;
+    padding: 15px;
+}
+
+.profile-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-sizing: border-box;
+}
+
+.profile-content label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #a1a1ff;
+    margin-left: 10px;
+}
+
+.profile-content input,
+.profile-content textarea {
+    width: calc(100% - 20px);
+    margin: 0 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s;
+    box-sizing: border-box;
+}
+
+.profile-content input:focus,
+.profile-content textarea:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.profile-content textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.profile-content button {
+    width: calc(100% - 20px);
+    margin: 0 10px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    box-sizing: border-box;
+}
+
+.profile-content button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+/* Активное состояние */
+.chat-active .chat-header {
+    display: flex;
+}
+
+.chat-active .rooms-list {
+    transform: translateX(-100%);
+}
+
+.chat-active .chat-window {
+    display: flex;
+}
+
+.profile-active .chat-header {
+    display: flex;
+}
+
+.profile-active .rooms-list {
+    transform: translateX(-100%);
+}
+
+.profile-active .profile-window {
+    display: flex;
+}
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #3a3a5a 0%, #4a4a7a 100%);
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+}
+
+.modal-content h2 {
+    margin: 0 10px 10px 10px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content p {
+    margin: 10px;
+    font-size: 14px;
+    color: #a1a1ff;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: calc(100% - 20px);
+    margin: 0 10px 10px 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s;
+    box-sizing: border-box;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+    color: #a1a1ff;
+}
+
+.modal-content textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.modal-content button {
+    width: calc(100% - 20px);
+    margin: 10px 10px 0 10px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    box-sizing: border-box;
+}
+
+.modal-content button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+/* Шапка комнаты */
+.room-header-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInModal 0.3s ease;
+}
+
+.room-header-content {
+    background: linear-gradient(135deg, #3a3a5a 0%, #4a4a7a 100%);
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.room-header-content h2 {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.room-header-content p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #a1a1ff;
+}
+
+.room-header-content .participants-list {
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 12px;
+    color: #ffffff;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.room-header-content button {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.room-header-content button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .chat-header {
+        padding: 10px 15px;
+    }
+
+    .back-button {
+        font-size: 24px;
+        padding: 8px;
+    }
+
+    .list-header {
+        padding: 10px 15px;
+    }
+
+    #rooms-list li {
+        padding: 12px 15px;
+    }
+
+    #chat-title {
+        font-size: 16px;
+    }
+
+    #participants-count {
+        font-size: 12px;
+    }
+
+    #message-input {
+        margin: 10px;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .profile-content input,
+    .profile-content textarea {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .profile-content button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .modal-content {
+        padding: 15px;
+        max-width: 300px;
+    }
+
+    .modal-content h2 {
+        font-size: 18px;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .modal-content button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .room-header-content {
+        padding: 15px;
+        max-width: 300px;
+    }
+
+    .room-header-content h2 {
+        font-size: 18px;
+    }
+
+    .room-header-content p {
+        font-size: 12px;
+    }
+
+    .room-header-content .participants-list {
+        font-size: 10px;
+        max-height: 120px;
+    }
+
+    .room-header-content button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}

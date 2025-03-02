@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/5968/5968918.png" type="image/png">
+    <script src="/static/index.js" defer></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Chat Header -->
+        <div class="chat-header" id="chat-header">
+            <button class="back-button" onclick="document.body.classList.contains('chat-active') ? showRoomsList() : hideProfile()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="chat-info">
+                <h3 id="chat-title"><i class="fas fa-comment-alt"></i> Chat Room</h3>
+                <span id="participants-count"><i class="fas fa-users"></i> 0 participants</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-container">
+            <!-- Rooms List -->
+            <div class="rooms-list" id="rooms-list-container">
+                <div class="list-header">
+                    <h3><i class="fas fa-door-open"></i> Chat Rooms</h3>
+                    <div>
+                        <button class="menu-button" onclick="toggleMenu()">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div id="menu-options">
+                            <button class="menu-option" onclick="showProfile()">
+                                <i class="fas fa-user"></i> My Profile
+                            </button>
+                            <button class="menu-option" onclick="showJoinRoomModal()">
+                                <i class="fas fa-sign-in-alt"></i> Join Room
+                            </button>
+                            <button class="menu-option" onclick="createRoom()">
+                                <i class="fas fa-plus"></i> Create Room
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul id="rooms-list"></ul>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="chat-window" id="chat-window">
+                <div id="system-message"></div>
+                <div id="chat-container"></div>
+                <input id="message-input" type="text" placeholder="Type your message...">
+            </div>
+
+            <!-- Profile Window -->
+            <div class="profile-window" id="profile-window">
+                <div class="profile-content">
+                    <label for="profile-nickname">Nickname:</label>
+                    <input type="text" id="profile-nickname" placeholder="Your nickname">
+                    <label for="profile-schedule">Work Schedule:</label>
+                    <input type="text" id="profile-schedule" placeholder="e.g., 9:00-17:00">
+                    <label for="profile-description">About Me:</label>
+                    <textarea id="profile-description" placeholder="Tell something about yourself"></textarea>
+                    <button onclick="updateProfile()"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = urlParams.get('token');
+
+        if (tokenFromUrl) {
+            localStorage.setItem('auth_token', tokenFromUrl);
+            function tryStartWebSocket() {
+                if (typeof startWebSocket === 'function') {
+                    startWebSocket(tokenFromUrl);
+                } else {
+                    setTimeout(tryStartWebSocket, 100);
+                }
+            }
+            tryStartWebSocket();
+            window.history.replaceState({}, document.title, "/chat");
+        } else {
+            const storedToken = localStorage.getItem('auth_token');
+            if (storedToken) {
+                function tryStartWebSocketFromStorage() {
+                    if (typeof startWebSocket === 'function') {
+                        startWebSocket(storedToken);
+                    } else {
+                        setTimeout(tryStartWebSocketFromStorage, 100);
+                    }
+                }
+                tryStartWebSocketFromStorage();
+            } else {
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
